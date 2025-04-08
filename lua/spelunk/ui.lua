@@ -388,7 +388,7 @@ local create_file_windows = function(max_stack_size)
 		for i = 1, max_stack_size do
 			set(
 				tostring(i),
-				string.format(':lua require("spelunk").goto_file_at_index(%d)<CR>', i),
+				string.format(':lua require("spelunk").goto_file_bookmark_at_index(%d)<CR>', i),
 				string.format("[spelunk.nvim] Go to file at stack position %d", i)
 			)
 		end
