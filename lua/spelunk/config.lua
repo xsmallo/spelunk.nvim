@@ -15,6 +15,11 @@ local default_config = {
 		add_file = "<leader>bfa",
 		next_file = "<leader>bfn",
 		prev_file = "<leader>bfp",
+		goto_file_1 = "<leader>bf1",
+		goto_file_2 = "<leader>bf2",
+		goto_file_3 = "<leader>bf3",
+		goto_file_4 = "<leader>bf4",
+		goto_file_5 = "<leader>bf5",
 	},
 	window_mappings = {
 		cursor_down = "j",
