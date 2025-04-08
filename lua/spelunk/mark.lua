@@ -128,6 +128,7 @@ M.virt_to_physical_file_stack = function(virtstack)
 	table.insert(ret, physstack)
 	return ret
 end
+
 ---@param idx integer
 ---@return VirtualBookmark
 M.set_mark_current_pos = function(idx)
