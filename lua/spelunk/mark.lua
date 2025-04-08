@@ -1,7 +1,7 @@
 local M = {}
 
 ---@type integer
-local ns_id = vim.api.nvim_create_namespace('spelunk')
+local ns_id = vim.api.nvim_create_namespace("spelunk")
 
 local show_status_col
 
@@ -35,6 +35,22 @@ local set_mark = function(mark, idx)
 		col = mark.col,
 		bufnr = bufnr,
 		mark_id = mark_id,
+		meta = mark.meta,
+	}
+end
+
+---@param mark FileBookmark
+---@return VirtualFileBookmark
+local set_file_mark = function(mark)
+	local bufnr = vim.fn.bufadd(mark.file)
+	local old_swapfile = vim.o.swapfile
+	vim.o.swapfile = false
+	vim.fn.bufload(bufnr)
+	vim.o.swapfile = old_swapfile
+
+	return {
+		file = mark.file,
+		bufnr = bufnr,
 		meta = mark.meta,
 	}
 end
@@ -79,15 +95,56 @@ M.virt_to_physical_stack = function(virtstacks)
 	return ret
 end
 
+---@param virt VirtualFileBookmark
+---@return PhysicalBookmark
+M.virt_to_physical_file = function(virt)
+	---@param vmark VirtualBookmark
+	---@return boolean, vim.api.keyset.get_extmark_item
+	local get_file_mark = function(vmark)
+		return pcall(vim.api.nvim_buf_get_extmark_by_id, vmark.bufnr, ns_id, vmark.mark_id, {})
+	end
+	local ok, mark = get_file_mark(virt)
+	if not ok or not extmark_ok(mark) then
+		virt = set_file_mark({
+			file = virt.file,
+			meta = virt.meta,
+		}, 0)
+		_, mark = get_file_mark(virt)
+	end
+	return {
+		file = vim.api.nvim_buf_get_name(virt.bufnr),
+		meta = virt.meta,
+	}
+end
+
+---@param virtstacks VirtualStack[]
+---@return PhysicalStack[]
+M.virt_to_physical_file_stack = function(virtstack)
+	local ret = {}
+	local physstack = { name = virtstack.name, bookmarks = {} }
+	for _, mark in pairs(virtstack.bookmarks) do
+		table.insert(physstack.bookmarks, M.virt_to_physical_file(mark))
+	end
+	table.insert(ret, physstack)
+	return ret
+end
 ---@param idx integer
 ---@return VirtualBookmark
 M.set_mark_current_pos = function(idx)
 	return set_mark({
 		file = vim.api.nvim_buf_get_name(0),
-		line = vim.fn.line('.'),
-		col = vim.fn.col('.'),
+		line = vim.fn.line("."),
+		col = vim.fn.col("."),
 		meta = {},
 	}, idx)
+end
+
+---@return VirtualFileBookmark
+M.set_mark_current_file = function()
+	return set_file_mark({
+		file = vim.api.nvim_buf_get_name(0),
+		meta = {},
+	})
 end
 
 ---@param virt VirtualBookmark
@@ -144,10 +201,10 @@ M.setup = function(stacks, show_status, enable_persist, persist_cb, get_stack_cb
 
 	-- Create a callback to persist changes to mark locations on file updates
 	if enable_persist then
-		local persist_augroup = vim.api.nvim_create_augroup('SpelunkPersistCallback', { clear = true })
-		vim.api.nvim_create_autocmd('BufWritePost', {
+		local persist_augroup = vim.api.nvim_create_augroup("SpelunkPersistCallback", { clear = true })
+		vim.api.nvim_create_autocmd("BufWritePost", {
 			group = persist_augroup,
-			pattern = '*',
+			pattern = "*",
 			callback = function(ctx)
 				local bufnr = ctx.buf
 				if not bufnr then
@@ -162,7 +219,7 @@ M.setup = function(stacks, show_status, enable_persist, persist_cb, get_stack_cb
 					end
 				end
 			end,
-			desc = '[spelunk.nvim] Persist mark updates on file change'
+			desc = "[spelunk.nvim] Persist mark updates on file change",
 		})
 	end
 

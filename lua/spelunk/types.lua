@@ -38,6 +38,16 @@
 ---@field name string
 ---@field bookmarks VirtualBookmark[]
 
+---@class FileBookmark
+---@field file string
+---@field meta MarkMeta
+
+---@class VirtualFileBookmark
+---@field file string
+---@field bufnr integer
+---@field mark_id integer
+---@field meta MarkMeta
+
 ---@class CreateWinOpts
 ---@field title string
 ---@field line integer

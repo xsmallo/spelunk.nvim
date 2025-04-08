@@ -5,10 +5,12 @@ local skipkey = 'NONE'
 local default_config = {
 	base_mappings = {
 		toggle = '<leader>bt',
+		toggle_file = '<leader>bf',
 		add = '<leader>ba',
+		add_file = '<leader>bfa',
 		next_bookmark = '<leader>bn',
 		prev_bookmark = '<leader>bp',
-		search_bookmarks = '<leader>bf',
+		search_bookmarks = '<leader>bg',
 		search_current_bookmarks = '<leader>bc',
 		search_stacks = '<leader>bs',
 	},
