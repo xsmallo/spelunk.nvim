@@ -14,7 +14,7 @@ local default_config = {
 		toggle_file = "<leader>bf",
 		add_file = "<leader>bfa",
 		next_file = "<leader>bfn",
-		previous_file = "<leader>bfp",
+		prev_file = "<leader>bfp",
 	},
 	window_mappings = {
 		cursor_down = "j",
