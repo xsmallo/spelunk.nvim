@@ -82,6 +82,16 @@ local max_stack_size = function()
 	return max
 end
 
+---@return integer
+local max_file_stack_size = function()
+	local max = 0
+	local size = #file_stack.bookmarks
+	if size > max then
+		max = size
+	end
+	return max
+end
+
 ---@return UpdateWinOpts
 local get_win_update_opts = function()
 	local lines = {}
@@ -108,7 +118,7 @@ local get_win_file_update_opts = function()
 		title = file_stack.name,
 		lines = lines,
 		bookmark = current_file_bookmark(),
-		max_stack_size = 1,
+		max_stack_size = max_file_stack_size(),
 	}
 end
 
