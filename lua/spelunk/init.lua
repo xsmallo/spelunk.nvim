@@ -446,6 +446,15 @@ function M.select_and_goto_file_number(number)
 	goto_file_bookmark(false)
 end
 
+function M.select_and_goto_file()
+	local num = vim.fn.getchar()
+	local key = vim.fn.nr2char(num)
+
+	if key:match("%d") then
+		require("spelunk").select_and_goto_file_number(tonumber(key))
+	end
+end
+
 function M.delete_current_stack()
 	if #bookmark_stacks < 2 then
 		vim.notify("[spelunk.nvim] Cannot delete a stack when you have less than two")
@@ -737,29 +746,9 @@ function M.setup(c)
 			"[spelunk.nvim] Go to previous file"
 		)
 		set(
-			base_config.goto_file_1,
-			':lua require("spelunk").select_and_goto_file_number(1)<CR>',
-			"[spelunk.nvim] Go to file number 1"
-		)
-		set(
-			base_config.goto_file_2,
-			':lua require("spelunk").select_and_goto_file_number(2)<CR>',
-			"[spelunk.nvim] Go to file number 2"
-		)
-		set(
-			base_config.goto_file_3,
-			':lua require("spelunk").select_and_goto_file_number(3)<CR>',
-			"[spelunk.nvim] Go to file number 3"
-		)
-		set(
-			base_config.goto_file_4,
-			':lua require("spelunk").select_and_goto_file_number(4)<CR>',
-			"[spelunk.nvim] Go to file number 4"
-		)
-		set(
-			base_config.goto_file_5,
-			':lua require("spelunk").select_and_goto_file_number(5)<CR>',
-			"[spelunk.nvim] Go to file number 5"
+			base_config.goto_file,
+			':lua require("spelunk").select_and_goto_file()<CR>',
+			"[spelunk.nvim] Go to file number"
 		)
 
 		-- Register telescope extension, only if telescope itself is loaded already
