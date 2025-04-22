@@ -8,6 +8,7 @@ local default_config = {
 		add = "ma",
 		next_bookmark = "mn",
 		prev_bookmark = "mp",
+		goto_bookmark = "m",
 		search_bookmarks = "<leader>bg",
 		search_current_bookmarks = "<leader>bc",
 		search_stacks = "<leader>bs",

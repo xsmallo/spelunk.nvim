@@ -455,6 +455,15 @@ function M.select_and_goto_file()
 	end
 end
 
+function M.select_and_goto_bookmark_number()
+	local num = vim.fn.getchar()
+	local key = vim.fn.nr2char(num)
+
+	if key:match("%d") then
+		require("spelunk").goto_bookmark_at_index(tonumber(key))
+	end
+end
+
 function M.delete_current_stack()
 	if #bookmark_stacks < 2 then
 		vim.notify("[spelunk.nvim] Cannot delete a stack when you have less than two")
@@ -732,6 +741,11 @@ function M.setup(c)
 			base_config.prev_bookmark,
 			':lua require("spelunk").select_and_goto_bookmark(-1)<CR>',
 			"[spelunk.nvim] Go to previous bookmark"
+		)
+		set(
+			base_config.goto_bookmark,
+			':lua require("spelunk").select_and_goto_bookmark_number()<CR>',
+			"[spelunk.nvim] Go to bookmark number"
 		)
 		set(base_config.toggle_file, M.toggle_file_window, "[spelunk.nvim] Toggle File UI")
 		set(base_config.add_file, M.add_file, "[spelunk.nvim] Add file")
